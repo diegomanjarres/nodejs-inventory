@@ -1,4 +1,3 @@
-var errors = require('errors')
 var parseQueryDateRange = (req, res, next) => {
   let date = new Date()
   let firstDay = new Date(date.getFullYear(), date.getMonth(), 1)
@@ -6,8 +5,8 @@ var parseQueryDateRange = (req, res, next) => {
     firstDay
   let endDate = req.query.endDate ? new Date(req.query.endDate) : new Date()
   let oneAndAHalfMonths = 1000 * 60 * 60 * 24 * 45
-  if (endDate - startDate > oneAndAHalfMonths) return res.send(new errors.DateRangeTooWideError())
-  if (endDate < startDate) return res.send(new errors.InvalidDateParamsError())
+  if (endDate - startDate > oneAndAHalfMonths) return res.send(new Error('DateRangeTooWideError'))
+  if (endDate < startDate) return res.send(new Error('InvalidDateParamsError'))
   let dateRange = {
     '$gte': startDate,
     '$lt': endDate

@@ -3,6 +3,8 @@ const Items = require('./business/items-logic.js')
 const ItemsRoutes = require('./routes/items.js')
 const TransactionsRoutes = require('./routes/transactions.js')
 //const InventoryRoutes = require('./routes/inventory.js')
+console.log(Transactions);
+console.log(Items);
 module.exports = {
   Transactions,
   Items,

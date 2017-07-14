@@ -2,8 +2,6 @@
  * Created by daman on 11/27/2015.
  */
 var mongoose=require('mongoose');
-var mongoosePaginate = require('mongoose-paginate');
-
 var Schema=mongoose.Schema;
 
 var transactionSchema = new Schema({
@@ -16,9 +14,5 @@ var transactionSchema = new Schema({
     unitPrice: Number,
     invoiceNumber: String,
     user: {type: Schema.Types.ObjectId, ref: 'User'}
-});
-
-transactionSchema.plugin(mongoosePaginate);
-
-
+})
 module.exports = mongoose.model('Transaction',transactionSchema);

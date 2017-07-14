@@ -27,6 +27,8 @@
     "eslint": "^4.2.0"
   },
   "dependencies": {
+    "express": "^4.15.3",
+    "mongoose": "^4.11.2",
     "q": "^1.5.0"
   }
 }
