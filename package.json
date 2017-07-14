@@ -1,0 +1,32 @@
+{
+  "name": "nodejs-inventory",
+  "version": "1.0.0",
+  "description": "An open source Inventory and stock management tool",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/diegomanjarres/nodejs-inventory.git"
+  },
+  "keywords": [
+    "Inventory",
+    "stock",
+    "warehouse",
+    "node",
+    "nodejs"
+  ],
+  "author": "Diego A. Manjarrés V.",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/diegomanjarres/nodejs-inventory/issues"
+  },
+  "homepage": "https://github.com/diegomanjarres/nodejs-inventory#readme",
+  "devDependencies": {
+    "eslint": "^4.2.0"
+  },
+  "dependencies": {
+    "q": "^1.5.0"
+  }
+}
