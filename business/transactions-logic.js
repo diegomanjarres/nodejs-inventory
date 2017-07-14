@@ -1,7 +1,6 @@
 const Transaction = require('../models/transaction')
 const ItemsLogic = require('./items-logic')
 const CostLogic = require('./cost-logic.js')
-const ChainLogic = require('./chain-logic.js')
 const ObjectID = require('mongodb')
   .ObjectID
 
@@ -76,31 +75,6 @@ let createInputItemtTransaction = (itemId, quantity, user) => {
   }
 }
 
-let transferStock = (itemID, senderUserID, recipientUserID, quantity) => {
-  ChainLogic.getChain(senderUserID, recipientUserID)
-    .then((chain) => {
-      if (!chain) throw new Error('not partners')
-      let fromTransaction = {
-        item: itemID,
-        date: new Date(),
-        quantity: quantity,
-        description: 'Transferencia de Producto',
-        type: 'transfer',
-        user: senderUserID
-      }
-      let toTransaction = {
-        item: itemID,
-        date: new Date(),
-        quantity: quantity,
-        description: 'Transferencia de Producto',
-        type: 'transfer',
-        user: recipientUserID
-      }
-      return saveMultipleTransactions([fromTransaction, toTransaction])
-
-    })
-
-}
 
 module.exports = {
   saveTransaction,
@@ -109,5 +83,4 @@ module.exports = {
   transform,
   saveMultipleTransactions,
   getTransactionsOfItems,
-  transferStock,
 }
