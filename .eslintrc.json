@@ -1,49 +1,3 @@
-Skip to content
-
-
-Features
-Business
-Explore
-Marketplace
-Pricing
-This repository
-
-Sign in or Sign up
-
-
- Watch
-31
- Star
-592
- Fork
-129
-
-standard/eslint-config-standard
- Code
- Issues 3
- Pull requests 0
-Insights
-Branch: master
-Find file
-Copy path
-eslint-config-standard/eslintrc.json
-6ffbd1f on Apr 14
- feross Relax rule: import/no-absolute-path
-7 contributors
-
-
-
-
-
-
-
-
-Raw
-Blame
-History
-
-192 lines (183 sloc) 6.8 KB
-
 {
 
   "parserOptions": {
@@ -425,6 +379,3 @@ History
   }
 
 }
-Contact GitHub API Training Shop Blog About
-
-© 2017 GitHub, Inc. Terms Privacy Security Status Help 
