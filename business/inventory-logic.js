@@ -25,7 +25,7 @@ let getItemStock = (query) => {
   let user = query.user
   let item = query.item
   query.date = { $lte: date }
-  return Cache.getClosestPreviousStockRecord(query)
+  let promise = Cache.getClosestPreviousStockRecord(query)
     .then(cachedValue => {
       if (cachedValue) {
         query.date.$gte = cachedValue.date
@@ -39,6 +39,7 @@ let getItemStock = (query) => {
       Cache.insertStockRecord({ date, stockLevel, user, item })
       return Q(stockLevel)
     })
+  return promise
 }
 
 let calculateActivity = (transactions, type) => {

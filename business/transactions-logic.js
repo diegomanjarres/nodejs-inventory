@@ -9,9 +9,13 @@ let saveTransaction = (transaction, cb) => {
     .save(cb)
 }
 
+let saveMultipleTransactions = (transactions) => {
+  return Transaction.collection.insert(transactions)
+}
+
 let getTransactions = (query) => (Transaction.find(query))
 
-let removeTransaction = Transaction.remove.bind(Transaction)
+let removeTransaction = (query) => (Transaction.remove(query))
 
 let transform = (userID, transformation) => {
   let { inputItems, outputItemID, quantity } = transformation
@@ -23,22 +27,19 @@ let transform = (userID, transformation) => {
     }
   }
   let cost = CostLogic.getTransformationCost(transformation)
-  ItemsLogic.getItems(itemsQuery)
+  let promise = ItemsLogic.getItems(itemsQuery)
     .then((items) => {
       let outputItem = items.find(i => i._id.equals(outputItemID))
-      let OutputItemTransaction = createOutputItemTransaction(
+      let outputItemTransaction = createOutputItemTransaction(
         outputItem._id, quantity,
         cost, userID)
       let inputItemsTransactions = inputItems.map(i => {
         return createInputItemtTransaction(i.item, -1 *
           i.quantity * quantity, userID)
       })
-      return saveMultipleTransactions([inputItemsTransactions, ...OutputItemTransaction])
+      return saveMultipleTransactions([...inputItemsTransactions, outputItemTransaction])
     })
-}
-
-let saveMultipleTransactions = (transactions) => {
-  return Transaction.collection.insert(transactions)
+  return promise
 }
 
 let getTransactionsOfItems = (userID, itemsIDs) => {
@@ -74,7 +75,6 @@ let createInputItemtTransaction = (itemId, quantity, user) => {
     user: user
   }
 }
-
 
 module.exports = {
   saveTransaction,
