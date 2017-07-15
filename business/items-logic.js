@@ -13,5 +13,5 @@ let removeItem = (query) => (Item.remove(query))
 module.exports = {
   upsertItem,
   getItems,
-  removeItem,
+  removeItem
 }

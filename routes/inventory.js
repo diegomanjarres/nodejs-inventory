@@ -16,24 +16,17 @@ router.route('/inventory/currentStock')
   })
 
 router.route(parseQueryDateRange, '/inventory/qtyIn')
-  .get(function (req, res) {
-    var query = req.query
-    query.user = req.user._id
-
-    db.getQuantityIn(query, function (err, qtyIn) {
-      if (err) return res.send(err)
-      res.json(qtyIn)
-    })
+  .get(function ({query}, res, next) {
+    InventoryLogic.quantityIn(query)
+      .then((result) => res.json(result))
+      .catch((err) => next(err))
   })
 
 router.route(parseQueryDateRange, '/inventory/qtyOut')
-  .get(function (req, res) {
-    var query = req.query
-    query.user = req.user._id
-    db.getQuantityOut(query, function (err, qtyOut) {
-      if (err) return res.send(err)
-      res.json(qtyOut)
-    })
+  .get(function ({query}, res, next) {
+    InventoryLogic.quantityOut(query)
+      .then((result) => res.json(result))
+      .catch((err) => next(err))
   })
 
 module.exports = router

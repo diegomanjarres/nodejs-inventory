@@ -1,4 +1,4 @@
-var StockCache = require('./models/stockCache')
+var StockCache = require('../models/itemStockCache')
 
 let getClosestPreviousStockRecord = (query) => {
   return StockCache.findOne(query, {}, { 'date': -1 })

@@ -1,22 +1,22 @@
 const TransactionsLogic = require('./transactions-logic')
-const ItemsLogic = require('./items-logic')
-const CostLogic = require('./cost-logic.js')
 const Cache = require('../cache')
 const Q = require('q')
 
 let quantityIn = (query) => {
-  TransactionsLogic.getTransactions(query)
+  return TransactionsLogic.getTransactions(query)
     .then((transactions) => {
       let qtyIn = calculateActivity(transactions, 'in')
       return Q(qtyIn)
     })
+    .catch(e => { throw new Error(e) })
 }
 let quantityOut = (query) => {
-  TransactionsLogic.getTransactions(query)
+  return TransactionsLogic.getTransactions(query)
     .then((transactions) => {
       let qtyOut = calculateActivity(transactions, 'out')
       return Q(qtyOut)
     })
+    .catch(e => { throw new Error(e) })
 }
 
 let getItemStock = (query) => {
@@ -25,7 +25,7 @@ let getItemStock = (query) => {
   let user = query.user
   let item = query.item
   query.date = { $lte: date }
-  Cache.getClosestPreviousStockRecord(query)
+  return Cache.getClosestPreviousStockRecord(query)
     .then(cachedValue => {
       if (cachedValue) {
         query.date.$gte = cachedValue.date
@@ -33,6 +33,7 @@ let getItemStock = (query) => {
       }
       return TransactionsLogic.getTransactions(query)
     })
+    .catch(() => (TransactionsLogic.getTransactions(query)))
     .then(transactions => {
       transactions.forEach(transaction => { stockLevel += transaction.quantity })
       Cache.insertStockRecord({ date, stockLevel, user, item })
