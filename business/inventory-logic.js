@@ -20,10 +20,27 @@ let quantityOut = (query) => {
 }
 
 let getItemStock = (query) => {
-  return 0;
+  let date = new Date(query.date) || new Date()
+  let stockLevel = 0
+  let user = query.user
+  let item = query.item
+  query.date = { $lte: date }
+  Cache.getClosestPreviousStockRecord(query)
+    .then(cachedValue => {
+      if (cachedValue) {
+        query.date.$gte = cachedValue.date
+        stockLevel = cachedValue.stockLevel
+      }
+      return TransactionsLogic.getTransactions(query)
+    })
+    .then(transactions => {
+      transactions.forEach(transaction => { stockLevel += transaction.quantity })
+      Cache.insertStockRecord({ date, stockLevel, user, item })
+      return Q(stockLevel)
+    })
 }
 
-let calculateActivity = function (transactions, type) {
+let calculateActivity = (transactions, type) => {
   return transactions.reduce((q, t) => {
     if (type === 'out' && t.quantity < 0) return q - t.quantity
     if (type === 'in' && t.quantity > 0) return q + t.quantity
@@ -33,6 +50,7 @@ let calculateActivity = function (transactions, type) {
 }
 
 module.exports = {
+  getItemStock,
   quantityIn,
-  quantityOut,
+  quantityOut
 }
