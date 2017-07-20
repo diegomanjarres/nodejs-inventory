@@ -20,10 +20,10 @@ let quantityOut = (query) => {
 }
 
 let getItemStock = (query) => {
-  let date = new Date(query.date) || new Date()
+  let date = query.date ? new Date(query.date) : new Date()
   let stockLevel = 0
-  let user = query.user
   let item = query.item
+  let user = query.user
   query.date = { $lte: date }
   let promise = Cache.getClosestPreviousStockRecord(query)
     .then(cachedValue => {

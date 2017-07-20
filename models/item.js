@@ -11,10 +11,7 @@ var itemSchema = new Schema({
   unitsType: String,
   category: String,
   lossCost: Number,
-  user: {
-    type: Schema.Types.ObjectId,
-    ref: 'User'
-  }
+  user: Object
 })
 
 module.exports = mongoose.model('Item', itemSchema)

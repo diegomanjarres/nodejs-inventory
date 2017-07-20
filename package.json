@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "unit": "mocha test/unit/index.js",
-    "test": "npm run unit"
+    "integration": "mocha test/integration/index.js",
+    "test": "npm run unit && npm run integration"
   },
   "repository": {
     "type": "git",
@@ -25,6 +26,8 @@
   },
   "homepage": "https://github.com/diegomanjarres/nodejs-inventory#readme",
   "devDependencies": {
+    "async": "^2.5.0",
+    "body-parser": "^1.17.2",
     "chai": "^4.1.0",
     "eslint": "^4.2.0",
     "eslint-config-standard": "^10.2.1",
@@ -33,7 +36,8 @@
     "eslint-plugin-promise": "^3.5.0",
     "eslint-plugin-standard": "^3.0.1",
     "mocha": "^3.4.2",
-    "sinon": "^2.3.8"
+    "sinon": "^2.3.8",
+    "supertest": "^3.0.0"
   },
   "dependencies": {
     "express": "^4.15.3",

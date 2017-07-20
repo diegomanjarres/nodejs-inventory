@@ -5,22 +5,23 @@ const express = require('express')
 const router = express.Router()
 const ItemsLogic = require('../business/items-logic')
 
-router.route('/:id')
-  .get( ({ params }, res, next) => {
+router.route('/items/:id')
+  .get(({ params }, res, next) => {
     ItemsLogic.getItems(params)
       .then((result) => res.json(result))
       .catch((err) => next(err))
   })
 
-router.route('/')
-  .get( ({ query }, res, next) => {
+router.route('/items')
+  .get(({ query, user }, res, next) => {
+    query.user = user._id
     ItemsLogic.getItems(query)
       .then(res.json.bind(res))
       .catch((err) => next(err))
   })
 
-router.route('/')
-  .post( (req, res, next) => {
+router.route('/items')
+  .post((req, res, next) => {
     let item = req.body
     item.user = req.user._id
     ItemsLogic.upsertItem(item)
@@ -28,8 +29,8 @@ router.route('/')
       .catch((err) => next(err))
   })
 
-router.route('/delete/:id')
-  .delete( ({ query }, res, next) => {
+router.route('/items/delete/:id')
+  .delete(({ query }, res, next) => {
     ItemsLogic.removeItem(query)
       .then((result) => res.json(result))
       .catch((err) => next(err))

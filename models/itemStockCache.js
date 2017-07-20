@@ -8,7 +8,7 @@ var itemStockCacheSchema = new Schema({
   item: { type: Schema.Types.ObjectId, ref: 'Item' },
   date: Date,
   stockLevel: Number,
-  user: { type: Schema.Types.ObjectId, ref: 'User' }
+  user: Object
 })
 
 module.exports = mongoose.model('ItemStockCache', itemStockCacheSchema)
