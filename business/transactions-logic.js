@@ -3,13 +3,19 @@ const ItemsLogic = require('./items-logic')
 const CostLogic = require('./cost-logic.js')
 const ObjectID = require('mongodb')
   .ObjectID
+let monitor = null
+
+let activateMonitor = () => { monitor = require('./monitor-logic.js') }
+let stopMonitor = () => { monitor = null }
 
 let saveTransaction = (transaction, cb) => {
+  if (monitor) monitor.monitor([transaction])
   return new Transaction(transaction)
     .save(cb)
 }
 
 let saveMultipleTransactions = (transactions) => {
+  if (monitor) monitor.monitor(transactions)
   return Transaction.collection.insert(transactions)
 }
 
@@ -83,4 +89,6 @@ module.exports = {
   transform,
   saveMultipleTransactions,
   getTransactionsOfItems,
+  activateMonitor,
+  stopMonitor
 }

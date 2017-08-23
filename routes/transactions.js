@@ -54,7 +54,6 @@ router.route('/transactions/transferItem')
     TransactionsLogic.transferStock(itemID, senderUserID, recipientUserID, quantity)
       .then((result) => res.json(result))
       .catch((err) => next(err))
-
   })
 
 module.exports = router
