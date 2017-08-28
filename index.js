@@ -6,12 +6,21 @@ const InventoryRoutes = require('./routes/inventory.js')
 const mongoose = require('mongoose')
 
 const connect = mongoose.connect.bind(mongoose)
-module.exports = {
-  connect,
-  Transactions,
-  Items,
-  ItemsRoutes,
-  TransactionsRoutes,
-  InventoryRoutes,
-  allRoutes: [ItemsRoutes, TransactionsRoutes, InventoryRoutes]
+
+function Inventory(i, n) {
+  this.n = n
+  this.i = i
+
+  let properties = {
+    connect,
+    Transactions,
+    Items,
+    ItemsRoutes,
+    TransactionsRoutes,
+    InventoryRoutes,
+    allRoutes: [ItemsRoutes, TransactionsRoutes, InventoryRoutes]
+  }
+
+  Object.assign(this, properties)
 }
+module.exports = Inventory

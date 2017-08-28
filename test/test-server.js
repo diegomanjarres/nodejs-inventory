@@ -1,17 +1,21 @@
 const app = require('express')()
 const bodyParser = require('body-parser')
-const nodejsInventory = require('../index.js')
+const NodejsInventory = require('../index.js')
 
-nodejsInventory.connect(process.env.DB || 'localhost:27017/nodejs-inventory-test')
+const Inventory = new NodejsInventory(1, 2)
+
+Inventory.connect(process.env.DB || 'localhost:27017/nodejs-inventory-test')
 
 app.use(bodyParser.json())
 
 app.use((req, res, next) => {
-  req.user = { _id: req.headers.user }
+  req.user = {
+    _id: req.headers.user
+  }
   req.query.user = req.user
   next()
 })
-app.use('/', nodejsInventory.allRoutes)
+app.use('/', Inventory.allRoutes)
 
 app.listen(process.env.PORT || 8000)
 
