@@ -1,27 +1,47 @@
 const Order = require('../models/order')
-const TransactionsLogic = require('./transactions-logic')
 const ObjectID = require('mongodb')
   .ObjectID
+module.exports = function OrdersLogic(config, TransactionsLogic) {
+  let saveOrder = (order) => {
+    return new Order(order)
+      .save()
+  }
 
-let saveOrder = (order) => {
-  return new Order(order)
-    .save()
-}
+  let getOrders = (query) => (Order.find(query))
 
-let getOrders = (query) => (Order.find(query))
+  let removeOrder = (query) => (Order.remove(query))
 
-let removeOrder = (query) => (Order.remove(query))
-
-let makeOrderEffective = (userId, orderId) => {
-  return Order.findOneAndUpdate({ user: new ObjectID(userId), '_id': new ObjectID(orderId) }, { $set: { 'effectiveDate': new Date() } })
-    .then(order => {
-      return TransactionsLogic.saveTransaction(order.transaction)
-    })
-}
-
-module.exports = {
-  saveOrder,
-  getOrders,
-  removeOrder,
-  makeOrderEffective
+  let makeOrderEffective = (userId, orderId) => {
+    return Order.findOneAndUpdate({ user: userId, '_id': new ObjectID(orderId) }, { $set: { 'effectiveDate': new Date() } })
+      .then(order => {
+        return TransactionsLogic.saveTransaction(order.transaction)
+      })
+  }
+  let getItemsActiveOrders = (userID, itemsIDs, date) => {
+    let ordersQuerybyItemIdAndUser = {
+      user: userID,
+      transaction: {
+        item: {
+          _id: {
+            $in: itemsIDs
+          }
+        }
+      }
+    }
+    let activeOrdersQuery = {
+      $or: [
+        { effectiveDate: { $exists: false }, ...ordersQuerybyItemIdAndUser },
+        { effectiveDate: { $lte: date }, ...ordersQuerybyItemIdAndUser }
+      ]
+    }
+    return getOrders(activeOrdersQuery)
+  }
+  return {
+    config,
+    saveOrder,
+    getOrders,
+    removeOrder,
+    makeOrderEffective,
+    getItemsActiveOrders
+  }
 }

@@ -1,8 +1,10 @@
 const assert = require('chai')
   .assert
 const sinon = require('sinon')
-const ItemsLogic = require('../../business/items-logic')
-const TransactionsLogic = require('../../business/transactions-logic')
+const testId = global.testDate
+const factory = require('../factory')
+const ItemsLogic = require('../../business/items-logic')()
+const TransactionsLogic = require('../../business/transactions-logic')(null, ItemsLogic)
 const CostLogic = require('../../business/cost-logic')
 const Transaction = require('../../models/transaction')
 const ObjectId = require('mongoose')
@@ -29,17 +31,7 @@ describe('transactions', function () {
       })
   })
 
-  it('should save multiple transactions', function () {
-    var stub = sandbox.stub(Transaction.collection, 'insert')
-      .resolves()
-
-    return TransactionsLogic.saveMultipleTransactions([])
-      .then(() => {
-        assert(stub.called)
-      })
-  })
-
-  it('should get all transactions', function () {
+  it('should get all orders', function () {
     var stub = sandbox.stub(Transaction, 'find')
       .resolves()
 
@@ -60,7 +52,7 @@ describe('transactions', function () {
   })
 
   it('should transform itemsinto a product item', function () {
-    const inputItems = getDummyInputItems(10)
+    const inputItems = factory.getDummyItems(testId, 10)
     const outputItemID = new ObjectId('outputItemID')
     const _id = outputItemID
     const quantity = 123
@@ -69,16 +61,8 @@ describe('transactions', function () {
     sandbox.stub(CostLogic, 'getTransformationCost')
       .resolves(123)
     sandbox.stub(Transaction.collection, 'insert')
-      .resolves('eexito')
+      .resolves()
 
     return TransactionsLogic.transform('userId', { inputItems, outputItemID, quantity })
-      .then(console.log)
   })
 })
-
-function getDummyInputItems(n) {
-  return [...Array(n)
-      .keys()
-    ]
-    .map(k => ({ item: k, quantity: k % 2 ? k : -k }))
-}

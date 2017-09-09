@@ -4,20 +4,8 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
-let transactionSchema = new Schema({
-  item: { type: Schema.Types.ObjectId, ref: 'Item' },
-  provider: Object,
-  date: Date,
-  quantity: Number,
-  description: String,
-  type: String,
-  unitPrice: Number,
-  invoiceNumber: String,
-  user: Object
-})
-
 let orderSchema = new Schema({
-  transactions: [transactionSchema],
+  transaction: Object,
   orderCost: Number,
   issueDate: Date,
   effectiveDate: Date,

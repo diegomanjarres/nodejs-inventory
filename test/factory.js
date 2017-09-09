@@ -1,16 +1,22 @@
-function getDummyItems (testId, n) {
+function getDummyItems(testId, n) {
   return [...Array(n)
     .keys()
   ].map(k => (newItem(testId, k)))
 }
 
-function getDummyTransactions (itemId, testId, n) {
+function getDummyTransactions(itemId, testId, n) {
   return [...Array(n)
     .keys()
   ].map(k => (newTransaction(itemId, testId, k)))
 }
 
-function newItem (testId, counter) {
+function getDummyOrders(testId, n) {
+  return [...Array(n)
+    .keys()
+  ].map(k => (newOrder(testId, k)))
+}
+
+function newItem(testId, counter) {
   return {
     name: 'testItem ' + testId + ' ' + counter,
     description: 'description',
@@ -24,7 +30,7 @@ function newItem (testId, counter) {
   }
 }
 
-function newTransaction (itemId, testId, counter) {
+function newTransaction(itemId, testId, counter) {
   return {
     item: itemId,
     date: new Date(),
@@ -36,7 +42,16 @@ function newTransaction (itemId, testId, counter) {
   }
 }
 
+function newOrder(testId, counter) {
+  return {
+    transaction: newTransaction('testItem' + testId + 0, testId, (counter * 2) + 1),
+    orderCost: 1,
+    issueDate: new Date()
+  }
+}
+
 module.exports = {
   getDummyItems,
-  getDummyTransactions
+  getDummyTransactions,
+  getDummyOrders
 }

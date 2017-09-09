@@ -2,7 +2,7 @@ const app = require('express')()
 const bodyParser = require('body-parser')
 const NodejsInventory = require('../index.js')
 
-const Inventory = new NodejsInventory(1, 2)
+const Inventory = new NodejsInventory({ i: 1, n: 2 })
 
 Inventory.connect(process.env.DB || 'localhost:27017/nodejs-inventory-test')
 

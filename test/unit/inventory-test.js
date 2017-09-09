@@ -1,8 +1,11 @@
 const assert = require('chai')
   .assert
 const sinon = require('sinon')
-const InventoryLogic = require('../../business/inventory-logic')
-const TransactionsLogic = require('../../business/transactions-logic')
+const testId = global.testDate
+const factory = require('../factory')
+const TransactionsLogic = require('../../business/transactions-logic')()
+const OrdersLogic = require('../../business/orders-logic')()
+const InventoryLogic = require('../../business/inventory-logic')(null, TransactionsLogic, OrdersLogic)
 const Cache = require('../../cache')
 
 var sandbox
@@ -17,11 +20,11 @@ afterEach(function () {
 describe('inventory', function () {
   it('should calculate incoming quantity', function () {
     sandbox.stub(TransactionsLogic, 'getTransactions')
-      .resolves(getDummytransactions(10))
+      .resolves(factory.getDummyTransactions('itemID', testId, 10))
 
     return InventoryLogic.quantityIn()
       .then(qty => {
-        assert.equal(qty, 25)
+        assert.equal(qty, 3000)
       })
   })
 
@@ -39,11 +42,11 @@ describe('inventory', function () {
 
   it('should calculate outgoing quantity', function () {
     sandbox.stub(TransactionsLogic, 'getTransactions')
-      .resolves(getDummytransactions(10))
+      .resolves(factory.getDummyTransactions('itemID', testId, 10))
 
     return InventoryLogic.quantityOut()
       .then(qty => {
-        assert.equal(qty, 20)
+        assert.equal(qty, 2500)
       })
   })
 
@@ -59,51 +62,63 @@ describe('inventory', function () {
       .catch(({ message }) => { assert.equal(message, errMsg) })
   })
 
-  it('should throw calculate item stock with cached record', function () {
+  it('should throw calculate item stock level cached record', function () {
     const date = new Date()
     const stockLevel = 100
     sandbox.stub(Cache, 'getClosestPreviousStockRecord')
       .resolves({ date, stockLevel })
     sandbox.stub(Cache, 'insertStockRecord')
     sandbox.stub(TransactionsLogic, 'getTransactions')
-      .resolves(getDummytransactions(10))
+      .resolves(factory.getDummyTransactions('itemID', testId, 10))
 
-    return InventoryLogic.getItemStock({date})
+    return InventoryLogic.getItemStockLevel({ date })
       .then(stockLevel => {
-        assert.equal(stockLevel, 105)
+        assert.equal(stockLevel, 600)
       })
   })
 
-  it('should throw calculate item stock without cached record', function () {
+  it('should  calculate item stock level without cached record', function () {
     const date = new Date()
     sandbox.stub(Cache, 'getClosestPreviousStockRecord')
       .resolves(null)
     sandbox.stub(Cache, 'insertStockRecord')
     sandbox.stub(TransactionsLogic, 'getTransactions')
-      .resolves(getDummytransactions(10))
+      .resolves(factory.getDummyTransactions('itemID', testId, 10))
 
-    return InventoryLogic.getItemStock({date})
+    return InventoryLogic.getItemStockLevel({ date })
       .then(stockLevel => {
-        assert.equal(stockLevel, 5)
+        assert.equal(stockLevel, 500)
       })
   })
 
-  it('should throw calculate item stock even when cache fails', function () {
+  it('should  calculate item stock level even when cache fails', function () {
     const date = new Date()
     sandbox.stub(Cache, 'getClosestPreviousStockRecord')
       .rejects('error')
     sandbox.stub(Cache, 'insertStockRecord')
     sandbox.stub(TransactionsLogic, 'getTransactions')
-      .resolves(getDummytransactions(10))
+      .resolves(factory.getDummyTransactions('itemID', testId, 10))
 
-    return InventoryLogic.getItemStock({date})
+    return InventoryLogic.getItemStockLevel({ date })
       .then(stockLevel => {
-        assert.equal(stockLevel, 5)
+        assert.equal(stockLevel, 500)
+      })
+  })
+
+  it('should  calculate item stock position', function () {
+    const date = new Date()
+    const stockLevel = 100
+    sandbox.stub(Cache, 'getClosestPreviousStockRecord')
+      .resolves({ date, stockLevel })
+    sandbox.stub(Cache, 'insertStockRecord')
+    sandbox.stub(TransactionsLogic, 'getTransactions')
+      .resolves(factory.getDummyTransactions('itemID', testId, 10))
+    sandbox.stub(OrdersLogic, 'getItemsActiveOrders')
+      .resolves(factory.getDummyOrders(testId, 2))
+
+    return InventoryLogic.getItemStockPosition({ date })
+      .then(stockPosition => {
+        assert.equal(stockPosition, 1200)
       })
   })
 })
-
-function getDummytransactions (n) {
-  return [...Array(n).keys()]
-    .map(k => ({ quantity: k % 2 ? k : -k }))
-}

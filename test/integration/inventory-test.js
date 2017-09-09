@@ -9,8 +9,10 @@ const testId = global.testDate + 'INVENTORY'
 describe('Inventory API Integration Tests', function () {
   let savedDummyItem = {}
   const numTransactions = 10
+  const numOrders = 2
   const dummyItems = factory.getDummyItems(testId, 1)
   let dummyTransactions = []
+  let dummyOrders = []
   it('should create an item', function (done) {
     request(app)
       .post('/items')
@@ -40,9 +42,20 @@ describe('Inventory API Integration Tests', function () {
     })
   })
 
+  it('should add some orders for that item', function (done) {
+    dummyOrders = factory.getDummyOrders(testId, numOrders)
+    async.concat(dummyOrders, postOrder, function (err, responses) {
+      if (err) assert.fail()
+      responses.forEach(function (res) {
+        assert.equal(res.statusCode, 200)
+      })
+      done()
+    })
+  })
+
   it('should an item`s current stock', function (done) {
     request(app)
-      .get('/inventory/stock')
+      .get('/inventory/stockLevel')
       .query({ item: savedDummyItem._id })
       .set('user', testId)
       .end(function (err, res) {
@@ -83,5 +96,13 @@ function postTransaction(transaction, cb) {
     .post('/transactions')
     .set('user', testId)
     .send(transaction)
+    .end(cb)
+}
+
+function postOrder(order, cb) {
+  request(app)
+    .post('/orders')
+    .set('user', testId)
+    .send(order)
     .end(cb)
 }

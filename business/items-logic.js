@@ -10,8 +10,12 @@ let getItems = (query) => (Item.find(query))
 
 let removeItem = (query) => (Item.remove(query))
 
-module.exports = {
-  upsertItem,
-  getItems,
-  removeItem
+function ItemsLogic(config) {
+  return {
+    config,
+    upsertItem,
+    getItems,
+    removeItem
+  }
 }
+module.exports = ItemsLogic

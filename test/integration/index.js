@@ -1,3 +1,4 @@
+import 'babel-polyfill'
 global.testDate = new Date()
   .toISOString()
   .replace(/T/, '')
@@ -8,4 +9,5 @@ global.testDate = new Date()
 
 require('./items-test')
 require('./transactions-test')
+require('./orders-test')
 require('./inventory-test')

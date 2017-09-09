@@ -1,7 +1,7 @@
 const assert = require('chai')
   .assert
 const sinon = require('sinon')
-const ItemsLogic = require('../../business/items-logic')
+const ItemsLogic = require('../../business/items-logic')()
 const Item = require('../../models/item')
 
 var sandbox
