@@ -20,12 +20,8 @@ module.exports = function OrdersLogic(config, TransactionsLogic) {
   let getItemsActiveOrders = (userID, itemsIDs, date) => {
     let ordersQuerybyItemIdAndUser = {
       user: userID,
-      transaction: {
-        item: {
-          _id: {
-            $in: itemsIDs
-          }
-        }
+      'transaction.item': {
+        $in: itemsIDs
       }
     }
     let activeOrdersQuery = {

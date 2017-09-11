@@ -10,10 +10,10 @@ function getDummyTransactions(itemId, testId, n) {
   ].map(k => (newTransaction(itemId, testId, k)))
 }
 
-function getDummyOrders(testId, n) {
+function getDummyOrders(itemId, testId, n) {
   return [...Array(n)
     .keys()
-  ].map(k => (newOrder(testId, k)))
+  ].map(k => (newOrder(itemId, testId, k)))
 }
 
 function newItem(testId, counter) {
@@ -42,9 +42,9 @@ function newTransaction(itemId, testId, counter) {
   }
 }
 
-function newOrder(testId, counter) {
+function newOrder(itemId = 'item' + testId + 0, testId, counter) {
   return {
-    transaction: newTransaction('testItem' + testId + 0, testId, (counter * 2) + 1),
+    transaction: newTransaction(itemId, testId, (counter * 2) + 1),
     orderCost: 1,
     issueDate: new Date()
   }

@@ -114,7 +114,7 @@ describe('inventory', function () {
     sandbox.stub(TransactionsLogic, 'getTransactions')
       .resolves(factory.getDummyTransactions('itemID', testId, 10))
     sandbox.stub(OrdersLogic, 'getItemsActiveOrders')
-      .resolves(factory.getDummyOrders(testId, 2))
+      .resolves(factory.getDummyOrders('itemID', testId, 2))
 
     return InventoryLogic.getItemStockPosition({ date })
       .then(stockPosition => {

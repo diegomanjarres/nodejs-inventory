@@ -43,7 +43,7 @@ describe('Inventory API Integration Tests', function () {
   })
 
   it('should add some orders for that item', function (done) {
-    dummyOrders = factory.getDummyOrders(testId, numOrders)
+    dummyOrders = factory.getDummyOrders(savedDummyItem._id, testId, numOrders)
     async.concat(dummyOrders, postOrder, function (err, responses) {
       if (err) assert.fail()
       responses.forEach(function (res) {
@@ -53,7 +53,7 @@ describe('Inventory API Integration Tests', function () {
     })
   })
 
-  it('should an item`s current stock', function (done) {
+  it('should  get an item`s current stock', function (done) {
     request(app)
       .get('/inventory/stockLevel')
       .query({ item: savedDummyItem._id })
@@ -65,7 +65,21 @@ describe('Inventory API Integration Tests', function () {
         done()
       })
   })
-  it('should an item`s incoming quantity', function (done) {
+
+  it('should  get an item`s current stock Position', function (done) {
+    request(app)
+      .get('/inventory/stockPosition')
+      .query({ item: savedDummyItem._id })
+      .set('user', testId)
+      .end(function (err, res) {
+        if (err) assert.fail()
+        assert.equal(res.statusCode, 200)
+        assert.equal(res.body, 1100)
+        done()
+      })
+  })
+
+  it('should get  an item`s incoming quantity', function (done) {
     request(app)
       .get('/inventory/qtyIn')
       .query({ item: savedDummyItem._id })
@@ -77,7 +91,7 @@ describe('Inventory API Integration Tests', function () {
         done()
       })
   })
-  it('should an item`s outgoing quantity', function (done) {
+  it('should get  an item`s outgoing quantity', function (done) {
     request(app)
       .get('/inventory/qtyOut')
       .query({ item: savedDummyItem._id })
