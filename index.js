@@ -1,3 +1,4 @@
+const Monitor = require('./business/monitor')
 const TransactionsLogic = require('./business/transactions-logic')
 const ItemsLogic = require('./business/items-logic.js')
 const InventoryLogic = require('./business/inventory-logic.js')
@@ -20,5 +21,7 @@ function Inventory(config) {
   this.ordersRoutes = OrdersRoutes(this.orders)
   this.inventoryRoutes = InventoryRoutes(this.inventory)
   this.allRoutes = [this.itemsRoutes, this.transactionsRoutes, this.inventoryRoutes, this.ordersRoutes]
+  this.startMonitor = () => { this.transactions.startMonitor(Monitor(config,this.inventory)) }
+  this.stopMonitor = () => { this.transactions.stopMonitor() }
 }
 module.exports = Inventory

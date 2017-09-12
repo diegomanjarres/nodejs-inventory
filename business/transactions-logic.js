@@ -4,7 +4,13 @@ const ObjectID = require('mongodb')
   .ObjectID
 
 function TransactionsLogic(config, ItemsLogic) {
+  var monitor
+  let startMonitor = (monitorInstance) => {
+    monitor = monitorInstance
+  }
+  let stopMonitor = () => { monitor = null }
   let saveTransaction = (transaction, cb) => {
+    if (monitor) monitor.check(transaction.item)
     return new Transaction(transaction)
       .save(cb)
   }
@@ -103,6 +109,8 @@ function TransactionsLogic(config, ItemsLogic) {
 
   return {
     config,
+    startMonitor,
+    stopMonitor,
     saveTransaction,
     getTransactions,
     removeTransaction,
