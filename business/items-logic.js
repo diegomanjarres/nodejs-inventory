@@ -10,9 +10,8 @@ let getItems = (query) => (Item.find(query))
 
 let removeItem = (query) => (Item.remove(query))
 
-function ItemsLogic(config) {
+function ItemsLogic() {
   return {
-    config,
     upsertItem,
     getItems,
     removeItem

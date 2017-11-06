@@ -1,14 +1,16 @@
 const Cache = require('../cache')
 const Q = require('q')
 
-function InventoryLogic(config, TransactionsLogic, OrdersLogic) {
+function InventoryLogic(TransactionsLogic, OrdersLogic) {
   let quantityIn = (query) => {
     return TransactionsLogic.getTransactions(query)
       .then((transactions) => {
         let qtyIn = calculateActivity(transactions, 'in')
         return Q(qtyIn)
       })
-      .catch(e => { throw new Error(e) })
+      .catch(e => {
+        throw new Error(e)
+      })
   }
   let quantityOut = (query) => {
     return TransactionsLogic.getTransactions(query)
@@ -16,7 +18,9 @@ function InventoryLogic(config, TransactionsLogic, OrdersLogic) {
         let qtyOut = calculateActivity(transactions, 'out')
         return Q(qtyOut)
       })
-      .catch(e => { throw new Error(e) })
+      .catch(e => {
+        throw new Error(e)
+      })
   }
 
   let getItemStockLevel = (query) => {
@@ -24,7 +28,9 @@ function InventoryLogic(config, TransactionsLogic, OrdersLogic) {
     let stockLevel = 0
     let item = query.item
     let user = query.user
-    query.date = { $lte: date }
+    query.date = {
+      $lte: date
+    }
     return Cache.getClosestPreviousStockRecord(query)
       .then(cachedValue => {
         if (cachedValue) {
@@ -35,8 +41,15 @@ function InventoryLogic(config, TransactionsLogic, OrdersLogic) {
       })
       .catch(() => (TransactionsLogic.getTransactions(query)))
       .then(transactions => {
-        transactions.forEach(transaction => { stockLevel += transaction.quantity })
-        Cache.insertStockRecord({ date, stockLevel, user, item })
+        transactions.forEach(transaction => {
+          stockLevel += transaction.quantity
+        })
+        Cache.insertStockRecord({
+          date,
+          stockLevel,
+          user,
+          item
+        })
         return Q(stockLevel)
       })
   }
@@ -66,7 +79,6 @@ function InventoryLogic(config, TransactionsLogic, OrdersLogic) {
     }, 0)
   }
   return {
-    config,
     getItemStockLevel,
     getItemStockPosition,
     quantityIn,

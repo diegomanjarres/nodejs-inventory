@@ -2,10 +2,8 @@ const app = require('express')()
 const bodyParser = require('body-parser')
 const NodejsInventory = require('../index.js')
 
-const Inventory = new NodejsInventory({ i: 1, n: 2 })
-
+const Inventory = new NodejsInventory()
 Inventory.connect(process.env.DB || 'localhost:27017/nodejs-inventory-test')
-Inventory.startMonitor()
 
 app.use(bodyParser.json())
 

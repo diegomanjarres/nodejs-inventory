@@ -3,12 +3,14 @@ var Q = require('q')
 const ObjectID = require('mongodb')
   .ObjectID
 
-function TransactionsLogic(config, ItemsLogic) {
+function TransactionsLogic(ItemsLogic) {
   var monitor
   let startMonitor = (monitorInstance) => {
     monitor = monitorInstance
   }
-  let stopMonitor = () => { monitor = null }
+  let stopMonitor = () => {
+    monitor = null
+  }
   let saveTransaction = (transaction, cb) => {
     if (monitor && transaction.quantity < 0) monitor.check(transaction.item)
     return new Transaction(transaction)
@@ -62,9 +64,7 @@ function TransactionsLogic(config, ItemsLogic) {
     } = transformation
     let promises = inputItems.map((item) => {
       let deferred = Q.defer()
-      ItemsLogic.getItems({
-          id: item._id
-        })
+      ItemsLogic.getItems({id: item._id})
         .then(item => {
           deferred.resolve(item.price * item.quantity)
         })
@@ -111,7 +111,6 @@ function TransactionsLogic(config, ItemsLogic) {
   }
 
   return {
-    config,
     startMonitor,
     stopMonitor,
     saveTransaction,

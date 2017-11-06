@@ -5,8 +5,8 @@ const testId = global.testDate
 const factory = require('../factory')
 const Order = require('../../models/order')
 const ItemsLogic = require('../../business/items-logic')()
-const TransactionsLogic = require('../../business/transactions-logic')(null, ItemsLogic)
-const OrdersLogic = require('../../business/orders-logic')(null, TransactionsLogic)
+const TransactionsLogic = require('../../business/transactions-logic')( ItemsLogic)
+const OrdersLogic = require('../../business/orders-logic')( TransactionsLogic)
 const ObjectId = require('mongoose')
   .Types
   .ObjectId

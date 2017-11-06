@@ -5,20 +5,20 @@ const testId = global.testDate
 const factory = require('../factory')
 const TransactionsLogic = require('../../business/transactions-logic')()
 const OrdersLogic = require('../../business/orders-logic')()
-const InventoryLogic = require('../../business/inventory-logic')(null, TransactionsLogic, OrdersLogic)
+const InventoryLogic = require('../../business/inventory-logic')(TransactionsLogic, OrdersLogic)
 const Cache = require('../../cache')
 
 var sandbox
-beforeEach(function () {
+beforeEach(function() {
   sandbox = sinon.sandbox.create()
 })
 
-afterEach(function () {
+afterEach(function() {
   sandbox.restore()
 })
 
-describe('inventory', function () {
-  it('should calculate incoming quantity', function () {
+describe('inventory', function() {
+  it('should calculate incoming quantity', function() {
     sandbox.stub(TransactionsLogic, 'getTransactions')
       .resolves(factory.getDummyTransactions('itemID', testId, 10))
 
@@ -28,7 +28,7 @@ describe('inventory', function () {
       })
   })
 
-  it('should throw calculate incoming quantity error', function () {
+  it('should throw calculate incoming quantity error', function() {
     const errMsg = 'calculate incoming quantity error'
     sandbox.stub(TransactionsLogic, 'getTransactions')
       .rejects(errMsg)
@@ -40,7 +40,7 @@ describe('inventory', function () {
       .catch(({ message }) => { assert.equal(message, errMsg) })
   })
 
-  it('should calculate outgoing quantity', function () {
+  it('should calculate outgoing quantity', function() {
     sandbox.stub(TransactionsLogic, 'getTransactions')
       .resolves(factory.getDummyTransactions('itemID', testId, 10))
 
@@ -50,7 +50,7 @@ describe('inventory', function () {
       })
   })
 
-  it('should throw calculate outgoing quantity error', function () {
+  it('should throw calculate outgoing quantity error', function() {
     const errMsg = 'calculate incoming quantity error'
     sandbox.stub(TransactionsLogic, 'getTransactions')
       .rejects(errMsg)
@@ -62,7 +62,7 @@ describe('inventory', function () {
       .catch(({ message }) => { assert.equal(message, errMsg) })
   })
 
-  it('should throw calculate item stock level cached record', function () {
+  it('should throw calculate item stock level cached record', function() {
     const date = new Date()
     const stockLevel = 100
     sandbox.stub(Cache, 'getClosestPreviousStockRecord')
@@ -77,7 +77,7 @@ describe('inventory', function () {
       })
   })
 
-  it('should  calculate item stock level without cached record', function () {
+  it('should  calculate item stock level without cached record', function() {
     const date = new Date()
     sandbox.stub(Cache, 'getClosestPreviousStockRecord')
       .resolves(null)
@@ -91,7 +91,7 @@ describe('inventory', function () {
       })
   })
 
-  it('should  calculate item stock level even when cache fails', function () {
+  it('should  calculate item stock level even when cache fails', function() {
     const date = new Date()
     sandbox.stub(Cache, 'getClosestPreviousStockRecord')
       .rejects('error')
@@ -105,7 +105,7 @@ describe('inventory', function () {
       })
   })
 
-  it('should  calculate item stock position', function () {
+  it('should  calculate item stock position', function() {
     const date = new Date()
     const stockLevel = 100
     sandbox.stub(Cache, 'getClosestPreviousStockRecord')

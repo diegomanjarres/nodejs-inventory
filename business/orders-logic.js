@@ -2,7 +2,7 @@ const Order = require('../models/order')
 const Q = require('q')
 const ObjectID = require('mongodb')
   .ObjectID
-module.exports = function OrdersLogic(config, TransactionsLogic) {
+module.exports = function OrdersLogic(TransactionsLogic) {
   let saveOrder = (order) => {
     return new Order(order)
       .save()
@@ -54,7 +54,6 @@ module.exports = function OrdersLogic(config, TransactionsLogic) {
   }
 
   return {
-    config,
     saveOrder,
     getOrders,
     removeOrder,
