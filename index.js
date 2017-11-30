@@ -6,7 +6,9 @@ const ItemsRoutes = require('./routes/items.js')
 const TransactionsRoutes = require('./routes/transactions.js')
 const OrdersRoutes = require('./routes/orders.js')
 const InventoryRoutes = require('./routes/inventory.js')
+const Q = require('q')
 const mongoose = require('mongoose')
+mongoose.Promise = Q.Promise
 
 function Inventory() {
   this.connect = mongoose.connect.bind(mongoose)
