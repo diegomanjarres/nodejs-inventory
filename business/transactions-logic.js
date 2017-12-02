@@ -15,6 +15,7 @@ function TransactionsLogic(ItemsLogic) {
     if (monitor && transaction.quantity < 0) monitor.check(transaction.item)
     return new Transaction(transaction)
       .save(cb)
+      .exec()
   }
 
   let saveMultipleTransactions = (transactions) => {
@@ -24,9 +25,9 @@ function TransactionsLogic(ItemsLogic) {
     return Transaction.collection.insert(transactions)
   }
 
-  let getTransactions = (query) => (Transaction.find(query))
+  let getTransactions = (query) => (Transaction.find(query).exec())
 
-  let removeTransaction = (query) => (Transaction.remove(query))
+  let removeTransaction = (query) => (Transaction.remove(query).exec())
 
   let transform = (userID, transformation) => {
     let {
