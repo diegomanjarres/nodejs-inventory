@@ -34,7 +34,7 @@ function InventoryLogic(TransactionsLogic, OrdersLogic) {
     return Cache.getClosestPreviousStockRecord(query)
       .then(cachedValue => {
         if (cachedValue) {
-          query.date.$gte = cachedValue.date
+          query.date.$gt = cachedValue.date
           stockLevel = cachedValue.stockLevel
         }
         return TransactionsLogic.getTransactions(query)
