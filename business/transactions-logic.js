@@ -12,14 +12,14 @@ function TransactionsLogic(ItemsLogic) {
     monitor = null
   }
   let saveTransaction = (transaction, cb) => {
-    if (monitor && transaction.quantity < 0) monitor.check(transaction.item)
+    if (monitor && transaction.quantity < 0) monitor.check(transaction)
     return new Transaction(transaction)
       .save(cb)
   }
 
   let saveMultipleTransactions = (transactions) => {
     transactions.forEach(transaction => {
-      if (monitor && transaction.quantity < 0) monitor.check(transaction.item)
+      if (monitor && transaction.quantity < 0) monitor.check(transaction)
     })
     return Transaction.collection.insert(transactions)
   }
