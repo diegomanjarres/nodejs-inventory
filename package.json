@@ -1,6 +1,6 @@
 {
   "name": "nodejs-inventory",
-  "version": "1.3.5",
+  "version": "1.3.6",
   "description": "An open source Inventory and stock management tool",
   "main": "index.js",
   "scripts": {
