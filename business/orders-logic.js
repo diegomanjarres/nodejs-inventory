@@ -29,7 +29,7 @@ module.exports = function OrdersLogic(TransactionsLogic) {
     let activeOrdersQuery = {
       $or: [
         { effectiveDate: { $exists: false }, ...ordersQuerybyItemIdAndUser },
-        { effectiveDate: { $lte: date }, ...ordersQuerybyItemIdAndUser }
+        { effectiveDate: { $gte: date }, ...ordersQuerybyItemIdAndUser }
       ]
     }
     return getOrders(activeOrdersQuery)
