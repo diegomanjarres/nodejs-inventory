@@ -13,6 +13,7 @@ function TransactionsLogic(ItemsLogic) {
   }
   let saveTransaction = (transaction, cb) => {
     if (monitor && transaction.quantity < 0) monitor.check(transaction)
+    if (!transaction.date) transaction.date = new Date()
     return new Transaction(transaction)
       .save(cb)
   }
